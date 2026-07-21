@@ -20,7 +20,6 @@ PLACEHOLDERS = {
 }.freeze
 
 RSpec.describe 'Bundled locales' do
-
   def flatten_keys(hash, prefix = nil)
     hash.flat_map do |key, value|
       full = [prefix, key].compact.join('.')
