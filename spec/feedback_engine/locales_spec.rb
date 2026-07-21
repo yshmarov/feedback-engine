@@ -3,22 +3,23 @@
 require 'rails_helper'
 require 'yaml'
 
+LOCALE_FILES = Dir[File.expand_path('../../config/locales/*.yml', __dir__)]
+
+# The widget keys every locale must ship. English additionally carries the
+# dashboard keys (admin-facing; other locales fall back to English there).
+WIDGET_KEYS = %w[
+  button title kind kinds.bug kinds.feature kinds.other section section_any
+  message message_placeholder screenshots screenshots_hint submit cancel
+  close thanks error_blank error_save error_too_many error_too_large
+].freeze
+
+PLACEHOLDERS = {
+  'screenshots_hint' => ['%{count}', '%{size}'],
+  'error_too_many' => ['%{count}'],
+  'error_too_large' => ['%{size}']
+}.freeze
+
 RSpec.describe 'Bundled locales' do
-  LOCALE_FILES = Dir[File.expand_path('../../config/locales/*.yml', __dir__)].sort
-
-  # The widget keys every locale must ship. English additionally carries the
-  # dashboard keys (admin-facing; other locales fall back to English there).
-  WIDGET_KEYS = %w[
-    button title kind kinds.bug kinds.feature kinds.other section section_any
-    message message_placeholder screenshots screenshots_hint submit cancel
-    close thanks error_blank error_save error_too_many error_too_large
-  ].freeze
-
-  PLACEHOLDERS = {
-    'screenshots_hint' => %w[%{count} %{size}],
-    'error_too_many' => %w[%{count}],
-    'error_too_large' => %w[%{size}]
-  }.freeze
 
   def flatten_keys(hash, prefix = nil)
     hash.flat_map do |key, value|
