@@ -21,4 +21,7 @@ Initial release.
   `author_label`, `kinds`, `sections`, `screenshots` limits, `show_button`,
   `button_label`, `mount_path`, `on_submit`.
 - `feedback_engine:install` generator (initializer, migration, mount).
-- Locales: en, es, fr, de, pt, uk.
+- Widget translations for English plus 25 more languages (ar, bg, bn, de, el,
+  es, fr, hi, hr, id, it, ja, ko, lb, nl, pl, pt, ro, ru, th, tr, uk, ur, vi,
+  zh-CN), with a parity spec keeping every locale's key set and interpolation
+  placeholders in sync.

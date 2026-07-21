@@ -24,8 +24,11 @@ app.
 - **Pluggable gating and attribution.** You decide who can send feedback, who
   can read it, and how a submission is attributed to a user.
 - **Localized.** The widget follows your app's `I18n.locale`; translations ship
-  for English, Spanish, French, German, Portuguese, and Ukrainian, with English
-  fallbacks for everything else. RTL locales render mirrored.
+  for English plus 25 more languages — Arabic, Bengali, Bulgarian, Chinese
+  (Simplified), Croatian, Dutch, French, German, Greek, Hindi, Indonesian,
+  Italian, Japanese, Korean, Luxembourgish, Polish, Portuguese, Romanian,
+  Russian, Spanish, Thai, Turkish, Ukrainian, Urdu and Vietnamese — with
+  English fallbacks for everything else. RTL locales render mirrored.
 
 ## How it works
 
