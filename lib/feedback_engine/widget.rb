@@ -79,7 +79,7 @@ module FeedbackEngine
           message: t(:message, 'Your message'),
           messagePlaceholder: t(:message_placeholder, "Tell us what's on your mind…"),
           screenshots: t(:screenshots, 'Screenshots'),
-          screenshotsHint: t(:screenshots_hint, 'optional, up to %{count}, %{size} MB each',
+          screenshotsHint: t(:screenshots_hint, 'optional, up to %{count} files, %{size} MB each',
                              count: FeedbackEngine.config.max_screenshots,
                              size: FeedbackEngine.config.max_screenshot_size / (1024 * 1024)),
           submit: t(:submit, 'Send feedback'),

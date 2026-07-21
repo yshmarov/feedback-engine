@@ -12,7 +12,7 @@ de:
     message: "Ihre Nachricht"
     message_placeholder: "Sagen Sie uns, was Sie denken…"
     screenshots: "Screenshots"
-    screenshots_hint: "optional, bis zu %{count}, je %{size} MB"
+    screenshots_hint: "optional, bis zu %{count} Dateien, je %{size} MB"
     submit: "Feedback senden"
     cancel: "Abbrechen"
     close: "Schließen"

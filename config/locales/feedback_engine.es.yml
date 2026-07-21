@@ -12,7 +12,7 @@ es:
     message: "Tu mensaje"
     message_placeholder: "Cuéntanos qué piensas…"
     screenshots: "Capturas de pantalla"
-    screenshots_hint: "opcional, hasta %{count}, %{size} MB cada una"
+    screenshots_hint: "opcional, hasta %{count} archivos, %{size} MB cada uno"
     submit: "Enviar comentarios"
     cancel: "Cancelar"
     close: "Cerrar"

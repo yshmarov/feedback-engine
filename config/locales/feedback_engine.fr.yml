@@ -12,7 +12,7 @@ fr:
     message: "Votre message"
     message_placeholder: "Dites-nous ce que vous pensez…"
     screenshots: "Captures d'écran"
-    screenshots_hint: "facultatif, jusqu'à %{count}, %{size} Mo chacune"
+    screenshots_hint: "facultatif, jusqu'à %{count} fichiers, %{size} Mo chacun"
     submit: "Envoyer"
     cancel: "Annuler"
     close: "Fermer"

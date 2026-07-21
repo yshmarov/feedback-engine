@@ -12,7 +12,7 @@ uk:
     message: "Ваше повідомлення"
     message_placeholder: "Розкажіть, що у вас на думці…"
     screenshots: "Знімки екрана"
-    screenshots_hint: "необов'язково, до %{count}, по %{size} МБ"
+    screenshots_hint: "необов'язково, до %{count} файлів, по %{size} МБ"
     submit: "Надіслати відгук"
     cancel: "Скасувати"
     close: "Закрити"

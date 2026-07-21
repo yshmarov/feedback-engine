@@ -339,6 +339,9 @@
       "#fbe-dialog .fbe-field>span{display:block;margin-bottom:4px;font-weight:600}",
       "#fbe-dialog select,#fbe-dialog textarea,#fbe-dialog input[type=file]{width:100%;box-sizing:border-box;",
       "padding:8px;border:1px solid #d1d5db;border-radius:8px;background:inherit;color:inherit;font:inherit}",
+      "#fbe-dialog input[type=file]{padding:6px;color:#6b7280;font-size:13px}",
+      "#fbe-dialog input[type=file]::file-selector-button{margin-inline-end:10px;padding:6px 12px;",
+      "border:1px solid #d1d5db;border-radius:6px;background:none;color:#1c2024;font:inherit;cursor:pointer}",
       "#fbe-dialog textarea{resize:vertical}",
       "#fbe-dialog .fbe-hint{display:block;margin-top:4px;font-size:12px;color:#6b7280;font-weight:400}",
       "#fbe-dialog .fbe-error{color:#dc2626;margin:0 0 12px}",
@@ -351,6 +354,8 @@
       "@media (prefers-color-scheme:dark){",
       "#fbe-dialog{background:#1a1f26;color:#e6e8ea}",
       "#fbe-dialog select,#fbe-dialog textarea,#fbe-dialog input[type=file]{border-color:#2a313a}",
+      "#fbe-dialog input[type=file]{color:#9aa2ab}",
+      "#fbe-dialog input[type=file]::file-selector-button{border-color:#2a313a;color:#e6e8ea}",
       "#fbe-dialog .fbe-secondary{border-color:#2a313a}",
       "#fbe-dialog .fbe-hint{color:#9aa2ab}",
       "}"

@@ -12,7 +12,7 @@ en:
     message: "Your message"
     message_placeholder: "Tell us what's on your mind…"
     screenshots: "Screenshots"
-    screenshots_hint: "optional, up to %{count}, %{size} MB each"
+    screenshots_hint: "optional, up to %{count} files, %{size} MB each"
     submit: "Send feedback"
     cancel: "Cancel"
     close: "Close"
