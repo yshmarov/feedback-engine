@@ -1,0 +1,23 @@
+pt:
+  feedback_engine:
+    button: "Feedback"
+    title: "Enviar feedback"
+    kind: "Tipo"
+    kinds:
+      bug: "Relatar erro"
+      feature: "Sugestão de funcionalidade"
+      other: "Outro"
+    section: "Seção"
+    section_any: "Geral"
+    message: "Sua mensagem"
+    message_placeholder: "Conte-nos o que você pensa…"
+    screenshots: "Capturas de tela"
+    screenshots_hint: "opcional, até %{count}, %{size} MB cada"
+    submit: "Enviar feedback"
+    cancel: "Cancelar"
+    close: "Fechar"
+    thanks: "Obrigado pelo seu feedback!"
+    error_blank: "Por favor, escreva uma mensagem."
+    error_save: "Não foi possível enviar. Tente novamente."
+    error_too_many: "Muitas capturas de tela (máx. %{count})."
+    error_too_large: "Uma captura é grande demais (máx. %{size} MB)."

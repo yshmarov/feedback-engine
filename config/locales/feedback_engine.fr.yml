@@ -1,0 +1,23 @@
+fr:
+  feedback_engine:
+    button: "Commentaires"
+    title: "Envoyer un commentaire"
+    kind: "Type"
+    kinds:
+      bug: "Signaler un bug"
+      feature: "Suggestion de fonctionnalité"
+      other: "Autre"
+    section: "Section"
+    section_any: "Général"
+    message: "Votre message"
+    message_placeholder: "Dites-nous ce que vous pensez…"
+    screenshots: "Captures d'écran"
+    screenshots_hint: "facultatif, jusqu'à %{count}, %{size} Mo chacune"
+    submit: "Envoyer"
+    cancel: "Annuler"
+    close: "Fermer"
+    thanks: "Merci pour votre retour !"
+    error_blank: "Veuillez saisir un message."
+    error_save: "Envoi impossible. Veuillez réessayer."
+    error_too_many: "Trop de captures d'écran (max %{count})."
+    error_too_large: "Une capture est trop volumineuse (max %{size} Mo)."
