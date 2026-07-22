@@ -1,6 +1,7 @@
 # feedback_engine
 
 [![Gem Version](https://img.shields.io/gem/v/feedback_engine)](https://rubygems.org/gems/feedback_engine)
+[![Downloads](https://img.shields.io/gem/dt/feedback_engine)](https://rubygems.org/gems/feedback_engine)
 [![CI](https://github.com/yshmarov/feedback-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yshmarov/feedback-engine/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](MIT-LICENSE)
 
@@ -11,6 +12,30 @@ feature requests, general comments, with optional screenshots — and stores
 every submission in your own database. A minimal built-in dashboard lets you
 browse and triage what users send. No third-party service, no data leaves your
 app.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="demo-widget-dark.png">
+  <img alt="The feedback widget: type, section, message, and screenshots" src="demo-widget-light.png" width="420">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="demo-dashboard-dark.png">
+  <img alt="The built-in triage dashboard: status tabs, filters, search" src="demo-dashboard-light.png" width="820">
+</picture>
+
+Both the widget and the dashboard follow the viewer's system appearance —
+these screenshots are the same pages in light and dark mode.
+
+## Why not Canny (or another feedback SaaS)?
+
+Hosted feedback tools are great until you notice the trade: your users'
+feedback lives in someone else's database, behind someone else's login, at a
+per-seat price. `feedback_engine` keeps the core loop — collect, triage,
+resolve — inside your app: **your database, your users, your auth, one gem.**
+Attribution plugs into whatever authentication you already have, gating is a
+lambda, and submissions are ordinary ActiveRecord rows you can query, export,
+or wire into Slack. (A public voting board à la Canny is on the
+[roadmap](https://github.com/yshmarov/feedback-engine/issues/1).)
 
 - **Zero UI dependencies.** The widget is plain JavaScript and styles itself.
   No Tailwind, no Stimulus, no importmap, no build step. The dashboard renders

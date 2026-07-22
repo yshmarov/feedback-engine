@@ -30,6 +30,7 @@ en:
       title: "Feedback"
       all_kinds: "All types"
       filter: "Filter"
+      message: "Message"
       search: "Search"
       search_placeholder: "Search message, author, section…"
       from: "From"
