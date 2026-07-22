@@ -40,6 +40,11 @@ module FeedbackEngine
     # Upload limits, enforced server-side and mirrored in the widget.
     attr_accessor :max_screenshots, :max_screenshot_size
 
+    # Per-IP throttle for the public submission endpoint, as keyword arguments
+    # for Rails' rate limiter (Rails 7.2+; ignored on 7.1). Read once when the
+    # controller loads — set it in an initializer. nil disables throttling.
+    attr_accessor :rate_limit
+
     # Show the floating feedback button. Set false to trigger the widget from
     # your own UI instead: any element with a `data-feedback-engine-open`
     # attribute opens the form.
@@ -68,6 +73,7 @@ module FeedbackEngine
       @screenshots = true
       @max_screenshots = 3
       @max_screenshot_size = 5 * 1024 * 1024
+      @rate_limit = { to: 10, within: 60 }
       @show_button = true
       @button_label = nil
       @mount_path = '/feedback'

@@ -11,6 +11,7 @@ WIDGET_KEYS = %w[
   button title kind kinds.bug kinds.feature kinds.other section section_any
   message message_placeholder screenshots screenshots_hint submit cancel
   close thanks error_blank error_save error_too_many error_too_large
+  error_rate_limited
 ].freeze
 
 PLACEHOLDERS = {

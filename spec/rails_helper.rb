@@ -58,6 +58,10 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
 
+  config.before(type: :system) do
+    driven_by :selenium, using: :headless_chrome, screen_size: [1200, 900]
+  end
+
   # Start every example from a fresh config, so a stub in one example can never
   # leak into another under random order.
   config.around do |example|
@@ -65,4 +69,8 @@ RSpec.configure do |config|
     example.run
     FeedbackEngine.instance_variable_set(:@config, nil)
   end
+
+  # The rate limiter counts per IP in Rails.cache; without a reset, create
+  # requests from earlier examples would trip the limit for later ones.
+  config.before { Rails.cache.clear }
 end

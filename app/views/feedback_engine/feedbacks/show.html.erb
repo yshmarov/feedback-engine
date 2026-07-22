@@ -18,8 +18,8 @@
   <% if @feedback.screenshots? %>
     <div class="shots">
       <% @feedback.screenshots.each do |screenshot| %>
-        <%= link_to main_app.url_for(screenshot), target: '_blank', rel: 'noopener' do %>
-          <%= image_tag main_app.url_for(screenshot), alt: screenshot.filename %>
+        <%= link_to feedback_screenshot_path(@feedback, screenshot.id), target: '_blank', rel: 'noopener' do %>
+          <%= image_tag feedback_screenshot_path(@feedback, screenshot.id), alt: screenshot.filename %>
         <% end %>
       <% end %>
     </div>

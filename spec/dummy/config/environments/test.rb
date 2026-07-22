@@ -8,4 +8,6 @@ Rails.application.configure do
   config.action_controller.allow_forgery_protection = false
   config.active_support.deprecation = :stderr
   config.active_storage.service = :test
+  # In-process store so the rate limiter has a working counter in specs.
+  config.cache_store = :memory_store
 end

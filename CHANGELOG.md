@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.2.0 (2026-07-22)
+
+Security:
+
+- Dashboard screenshots are now streamed through an engine route gated by
+  `config.authorize_admin`, instead of linking public Active Storage blob
+  URLs. Screenshots can contain anything a user's screen showed; they are no
+  longer reachable without passing the dashboard's own authorization,
+  regardless of how the host configures blob access. (Also fixes broken
+  images in apps that lock their blob endpoints down.)
+
+Added:
+
+- Per-IP rate limiting on the submission endpoint via Rails' built-in
+  limiter (Rails 7.2+; no-op on 7.1). Default 10 submissions/minute; tune or
+  disable with `config.rate_limit`. Localized 429 message in all 26 languages.
+- Browser-level test suite for the widget (Capybara + headless Chrome):
+  open/submit/validation/screenshot-attach/Escape/custom-trigger flows.
+- CI now tests the full Rails support matrix: 7.1, 7.2, 8.0, and 8.1 across
+  Ruby 3.2–3.4.
+
 ## 0.1.0 (2026-07-21)
 
 Initial release.

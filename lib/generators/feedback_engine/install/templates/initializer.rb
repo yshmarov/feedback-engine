@@ -28,6 +28,10 @@ FeedbackEngine.configure do |config|
   # config.max_screenshots = 3
   # config.max_screenshot_size = 5.megabytes
 
+  # Per-IP throttle for the submission endpoint (Rails 7.2+; ignored on 7.1).
+  # Keyword arguments for Rails' rate limiter; nil disables throttling.
+  # config.rate_limit = { to: 10, within: 1.minute }
+
   # Show the floating feedback button. Set false and add
   # `data-feedback-engine-open` to any element to trigger the form yourself.
   # config.show_button = true

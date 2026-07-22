@@ -21,3 +21,4 @@ es:
     error_save: "No se pudo enviar. Inténtalo de nuevo."
     error_too_many: "Demasiadas capturas (máx. %{count})."
     error_too_large: "Una captura es demasiado grande (máx. %{size} MB)."
+    error_rate_limited: "Demasiados envíos. Espera un momento e inténtalo de nuevo."

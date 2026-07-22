@@ -1,6 +1,7 @@
 *.gem
 .bundle/
 Gemfile.lock
+gemfiles/*.lock
 .ruby-lsp/
 log/
 tmp/

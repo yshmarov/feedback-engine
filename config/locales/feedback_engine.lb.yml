@@ -21,3 +21,4 @@ lb:
     error_save: "Konnt net geschéckt ginn. Probéiert w.e.g. nach eng Kéier."
     error_too_many: "Ze vill Screenshots (max. %{count})."
     error_too_large: "E Screenshot ass ze grouss (max. %{size} MB)."
+    error_rate_limited: "Ze vill Envoien. Waart w.e.g. e Moment a probéiert nach eng Kéier."

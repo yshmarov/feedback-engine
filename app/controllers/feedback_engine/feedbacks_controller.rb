@@ -11,6 +11,17 @@ module FeedbackEngine
     before_action :require_admin, except: :create
     before_action :set_feedback, only: %i[show update destroy]
 
+    # Throttle the public endpoint per IP so one user or bot can't flood the
+    # table (each submission may carry megabytes of screenshots). Uses the
+    # rate limiter built into Rails 7.2+ (backed by Rails.cache); on Rails 7.1
+    # this is a no-op. Tune or disable via config.rate_limit — read once at
+    # boot, after the host's initializer.
+    if respond_to?(:rate_limit) && FeedbackEngine.config.rate_limit
+      rate_limit(**FeedbackEngine.config.rate_limit,
+                 only: :create,
+                 with: -> { render json: { errors: [t_error(:error_rate_limited)] }, status: :too_many_requests })
+    end
+
     def index
       @status = Feedback::STATUSES.include?(params[:status]) ? params[:status] : 'open'
       @kind = FeedbackEngine.config.kinds.map(&:to_s).include?(params[:kind]) ? params[:kind] : nil
@@ -112,7 +123,8 @@ module FeedbackEngine
       defaults = {
         error_save: 'Could not send feedback. Please try again.',
         error_too_many: 'Too many screenshots (max %{count}).',
-        error_too_large: 'A screenshot is too large (max %{size} MB).'
+        error_too_large: 'A screenshot is too large (max %{size} MB).',
+        error_rate_limited: 'Too many submissions. Please wait a moment and try again.'
       }
       I18n.t(key, scope: :feedback_engine, default: defaults[key], **args)
     end

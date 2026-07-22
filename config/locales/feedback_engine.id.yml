@@ -21,3 +21,4 @@ id:
     error_save: "Masukan gagal terkirim. Silakan coba lagi."
     error_too_many: "Terlalu banyak tangkapan layar (maks. %{count})."
     error_too_large: "Sebuah tangkapan layar terlalu besar (maks. %{size} MB)."
+    error_rate_limited: "Terlalu banyak kiriman. Tunggu sebentar dan coba lagi."

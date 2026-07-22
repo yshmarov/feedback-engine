@@ -21,6 +21,7 @@ en:
     error_save: "Could not send feedback. Please try again."
     error_too_many: "Too many screenshots (max %{count})."
     error_too_large: "A screenshot is too large (max %{size} MB)."
+    error_rate_limited: "Too many submissions. Please wait a moment and try again."
     statuses:
       open: "Open"
       in_review: "In review"

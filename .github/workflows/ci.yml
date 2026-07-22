@@ -7,20 +7,35 @@ on:
 
 jobs:
   test:
-    name: Test (Ruby ${{ matrix.ruby }})
+    name: Test (Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         ruby: ["3.2", "3.3", "3.4"]
+        rails: ["7.1", "7.2", "8.0", "8.1"]
+    env:
+      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}.gemfile
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Run tests
-        run: bundle exec rspec
+      - name: Run tests (excluding browser tests)
+        run: bundle exec rspec --exclude-pattern "system/**/*"
+
+  system:
+    name: Browser tests (widget)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - name: Run system tests
+        run: bundle exec rspec spec/system
 
   lint:
     name: RuboCop

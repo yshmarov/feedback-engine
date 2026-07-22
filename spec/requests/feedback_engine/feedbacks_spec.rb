@@ -66,6 +66,21 @@ RSpec.describe 'Feedback submission', type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
     end
 
+    it 'throttles a flood of submissions per IP' do
+      skip 'rate_limit requires Rails 7.2+' unless FeedbackEngine::FeedbacksController.respond_to?(:rate_limit)
+
+      10.times do |i|
+        post '/feedback/feedbacks', params: { feedback: { kind: 'bug', message: "Flood #{i}" } }
+        expect(response).to have_http_status(:created)
+      end
+
+      post '/feedback/feedbacks', params: { feedback: { kind: 'bug', message: 'One too many' } }
+
+      expect(response).to have_http_status(:too_many_requests)
+      expect(response.parsed_body['errors'].first).to include('Too many submissions')
+      expect(FeedbackEngine::Feedback.count).to eq(10)
+    end
+
     it 'is forbidden when the gate says no' do
       FeedbackEngine.config.enabled = ->(_request) { false }
 

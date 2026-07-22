@@ -21,3 +21,4 @@ pl:
     error_save: "Nie udało się wysłać opinii. Spróbuj ponownie."
     error_too_many: "Za dużo zrzutów ekranu (maks. %{count})."
     error_too_large: "Zrzut ekranu jest za duży (maks. %{size} MB)."
+    error_rate_limited: "Zbyt wiele zgłoszeń. Odczekaj chwilę i spróbuj ponownie."

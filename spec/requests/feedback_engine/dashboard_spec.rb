@@ -7,6 +7,16 @@ RSpec.describe 'Feedback dashboard', type: :request do
     FeedbackEngine::Feedback.create!({ kind: 'bug', message: 'It broke' }.merge(attrs))
   end
 
+  def create_feedback_with_screenshot(**attrs)
+    create_feedback(**attrs).tap do |feedback|
+      feedback.screenshots.attach(
+        io: File.open(File.expand_path('../../fixtures/tiny.png', __dir__)),
+        filename: 'tiny.png',
+        content_type: 'image/png'
+      )
+    end
+  end
+
   context 'when not authorized (the default outside development)' do
     it 'forbids the index' do
       get '/feedback'
@@ -18,6 +28,12 @@ RSpec.describe 'Feedback dashboard', type: :request do
       patch "/feedback/feedbacks/#{feedback.id}", params: { feedback: { status: 'resolved' } }
       expect(response).to have_http_status(:forbidden)
       expect(feedback.reload.status).to eq('open')
+    end
+
+    it 'forbids screenshots' do
+      feedback = create_feedback_with_screenshot
+      get "/feedback/feedbacks/#{feedback.id}/screenshots/#{feedback.screenshots.first.id}"
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -58,19 +74,35 @@ RSpec.describe 'Feedback dashboard', type: :request do
       expect(response.body).to include('user@example.com')
     end
 
-    it 'renders attached screenshots' do
-      feedback = create_feedback
-      feedback.screenshots.attach(
-        io: File.open(File.expand_path('../../fixtures/tiny.png', __dir__)),
-        filename: 'tiny.png',
-        content_type: 'image/png'
-      )
+    it 'renders screenshots via the gated engine route, not blob URLs' do
+      feedback = create_feedback_with_screenshot
+      screenshot_path = "/feedback/feedbacks/#{feedback.id}/screenshots/#{feedback.screenshots.first.id}"
 
       get "/feedback/feedbacks/#{feedback.id}"
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include('<img')
-      expect(response.body).to include('tiny.png')
+      expect(response.body).to include(%(src="#{screenshot_path}"))
+      expect(response.body).not_to include('/rails/active_storage/')
+    end
+
+    it 'streams a screenshot to an admin' do
+      feedback = create_feedback_with_screenshot
+
+      get "/feedback/feedbacks/#{feedback.id}/screenshots/#{feedback.screenshots.first.id}"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq('image/png')
+      expect(response.headers['Content-Disposition']).to include('inline')
+      expect(response.body.bytesize).to eq(feedback.screenshots.first.byte_size)
+    end
+
+    it '404s for a screenshot of another feedback' do
+      feedback = create_feedback_with_screenshot
+      other = create_feedback
+
+      get "/feedback/feedbacks/#{other.id}/screenshots/#{feedback.screenshots.first.id}"
+
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'updates the status' do
