@@ -71,48 +71,6 @@ RSpec.describe 'Feedback widget', type: :system do
     expect(page).to have_css('#fbe-dialog')
   end
 
-  it 'accepts a pasted image, shows a removable chip, and uploads it' do
-    visit '/sample'
-
-    find('#fbe-button').click
-    fill_in 'Your message', with: 'Pasted screenshot'
-    page.execute_script(<<~JS)
-      const dt = new DataTransfer();
-      dt.items.add(new File(['fake-image-bytes'], 'pasted.png', { type: 'image/png' }));
-      document.getElementById('fbe-dialog').dispatchEvent(
-        new ClipboardEvent('paste', { clipboardData: dt, bubbles: true })
-      );
-    JS
-
-    expect(page).to have_css('.fbe-chips li', text: 'pasted.png')
-    click_button 'Send feedback'
-
-    expect(page).to have_text('Thanks for your feedback!')
-    expect(FeedbackEngine::Feedback.last.screenshots.sole.filename.to_s).to eq('pasted.png')
-  end
-
-  it 'accepts dropped images, ignores non-images, and chips remove files' do
-    visit '/sample'
-
-    find('#fbe-button').click
-    page.execute_script(<<~JS)
-      const dt = new DataTransfer();
-      dt.items.add(new File(['a'], 'one.png', { type: 'image/png' }));
-      dt.items.add(new File(['b'], 'two.png', { type: 'image/png' }));
-      dt.items.add(new File(['c'], 'notes.txt', { type: 'text/plain' }));
-      document.getElementById('fbe-dialog').dispatchEvent(
-        new DragEvent('drop', { dataTransfer: dt, bubbles: true })
-      );
-    JS
-
-    expect(page).to have_css('.fbe-chips li', count: 2)
-
-    within('.fbe-chips li', text: 'one.png') { find('button').click }
-
-    expect(page).to have_css('.fbe-chips li', count: 1)
-    expect(page).to have_no_css('.fbe-chips li', text: 'one.png')
-  end
-
   it 'keeps Tab focus inside the dialog' do
     visit '/sample'
 

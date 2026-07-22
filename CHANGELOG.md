@@ -1,11 +1,17 @@
 # Changelog
 
+## 0.4.0 (2026-07-22)
+
+- Removed the clipboard-paste / drag-and-drop / file-chips screenshot intake
+  added in 0.3.0 — pasted files all arrive as `image.png` and the extra UI
+  wasn't worth its complexity. Screenshots are back to a plain file input.
+
 ## 0.3.0 (2026-07-22)
 
-- Screenshots can now be pasted (Cmd/Ctrl+V) or dragged & dropped anywhere on
+- Screenshots can be pasted (Cmd/Ctrl+V) or dragged & dropped anywhere on
   the feedback form, not just picked via the file dialog. Selected files show
   as removable chips; non-images are ignored and the configured maximum is
-  enforced at intake.
+  enforced at intake. (Removed again in 0.4.0.)
 - The dialog traps Tab focus while open and is labelled for screen readers
   (`aria-labelledby`).
 - Dashboard search across message, author, and section (case-insensitive,
