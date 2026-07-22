@@ -52,6 +52,15 @@ RSpec.describe 'Feedback submission', type: :request do
       expect(submitted.map(&:message)).to eq(['Hello'])
     end
 
+    it 'still accepts the submission when the on_submit hook raises' do
+      FeedbackEngine.config.on_submit = ->(_feedback) { raise 'host mailer exploded' }
+
+      post '/feedback/feedbacks', params: { feedback: { kind: 'other', message: 'Hello' } }
+
+      expect(response).to have_http_status(:created)
+      expect(FeedbackEngine::Feedback.count).to eq(1)
+    end
+
     it 'rejects a blank message' do
       post '/feedback/feedbacks', params: { feedback: { kind: 'bug', message: '' } }
 

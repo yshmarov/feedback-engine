@@ -20,6 +20,8 @@
   var Z = 2147483000;
   var overlay = null;
   var lastFocused = null;
+  var fileInput = null;
+  var fileChips = null;
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -101,13 +103,35 @@
     dialog.id = "fbe-dialog";
     dialog.setAttribute("role", "dialog");
     dialog.setAttribute("aria-modal", "true");
-    dialog.setAttribute("aria-label", config.labels.title);
+    dialog.setAttribute("aria-labelledby", "fbe-title");
     if (config.rtl) dialog.setAttribute("dir", "rtl");
 
     dialog.appendChild(header());
     dialog.appendChild(form());
     overlay.appendChild(dialog);
     document.body.appendChild(overlay);
+
+    // Keep Tab (and Shift+Tab) cycling inside the dialog while it is open.
+    overlay.addEventListener("keydown", trapFocus);
+
+    // Screenshots can be pasted (Cmd/Ctrl+V) or dropped anywhere on the form —
+    // the file picker is just one way in.
+    if (config.screenshots.enabled) {
+      dialog.addEventListener("paste", function (event) {
+        var files = event.clipboardData && event.clipboardData.files;
+        if (files && files.length) {
+          event.preventDefault();
+          addFiles(files);
+        }
+      });
+      dialog.addEventListener("dragover", function (event) {
+        event.preventDefault();
+      });
+      dialog.addEventListener("drop", function (event) {
+        event.preventDefault();
+        if (event.dataTransfer) addFiles(event.dataTransfer.files);
+      });
+    }
 
     var first = dialog.querySelector("select, textarea, input");
     if (first) first.focus();
@@ -117,7 +141,24 @@
     if (!overlay) return;
     overlay.remove();
     overlay = null;
+    fileInput = null;
+    fileChips = null;
     if (lastFocused && lastFocused.focus) lastFocused.focus();
+  }
+
+  function trapFocus(event) {
+    if (event.key !== "Tab" || !overlay) return;
+    var focusable = overlay.querySelectorAll("button, select, textarea, input, a[href]");
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   function header() {
@@ -125,6 +166,7 @@
     head.className = "fbe-head";
 
     var title = document.createElement("h2");
+    title.id = "fbe-title";
     title.textContent = config.labels.title;
 
     var close = document.createElement("button");
@@ -223,17 +265,67 @@
   }
 
   function screenshotsField() {
-    var input = document.createElement("input");
-    input.type = "file";
-    input.name = "screenshots";
-    input.multiple = true;
-    input.accept = "image/*";
-    var wrap = field(config.labels.screenshots, input);
+    fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.name = "screenshots";
+    fileInput.multiple = true;
+    fileInput.accept = "image/*";
+    fileInput.addEventListener("change", renderFileChips);
+    var wrap = field(config.labels.screenshots, fileInput);
     var hint = document.createElement("span");
     hint.className = "fbe-hint";
     hint.textContent = config.labels.screenshotsHint;
     wrap.appendChild(hint);
+    fileChips = document.createElement("ul");
+    fileChips.className = "fbe-chips";
+    wrap.appendChild(fileChips);
     return wrap;
+  }
+
+  // Merge pasted/dropped images into the file input (the single source of
+  // truth for what gets uploaded), capped at the configured maximum.
+  function addFiles(files) {
+    if (!fileInput) return;
+    var transfer = new DataTransfer();
+    var current = Array.prototype.slice.call(fileInput.files);
+    var incoming = Array.prototype.slice.call(files).filter(function (file) {
+      return /^image\//.test(file.type);
+    });
+    current.concat(incoming).slice(0, config.screenshots.max).forEach(function (file) {
+      transfer.items.add(file);
+    });
+    fileInput.files = transfer.files;
+    renderFileChips();
+  }
+
+  function removeFile(index) {
+    if (!fileInput) return;
+    var transfer = new DataTransfer();
+    Array.prototype.slice.call(fileInput.files).forEach(function (file, i) {
+      if (i !== index) transfer.items.add(file);
+    });
+    fileInput.files = transfer.files;
+    renderFileChips();
+  }
+
+  function renderFileChips() {
+    if (!fileChips) return;
+    fileChips.textContent = "";
+    Array.prototype.slice.call(fileInput.files).forEach(function (file, index) {
+      var chip = document.createElement("li");
+      var name = document.createElement("span");
+      name.textContent = file.name;
+      var remove = document.createElement("button");
+      remove.type = "button";
+      remove.setAttribute("aria-label", config.labels.close + " " + file.name);
+      remove.textContent = "×";
+      remove.addEventListener("click", function () {
+        removeFile(index);
+      });
+      chip.appendChild(name);
+      chip.appendChild(remove);
+      fileChips.appendChild(chip);
+    });
   }
 
   // --- submit -------------------------------------------------------------------
@@ -344,6 +436,12 @@
       "border:1px solid #d1d5db;border-radius:6px;background:none;color:#1c2024;font:inherit;cursor:pointer}",
       "#fbe-dialog textarea{resize:vertical}",
       "#fbe-dialog .fbe-hint{display:block;margin-top:4px;font-size:12px;color:#6b7280;font-weight:400}",
+      "#fbe-dialog .fbe-chips{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}",
+      "#fbe-dialog .fbe-chips li{display:flex;align-items:center;gap:4px;max-width:100%;",
+      "padding:2px 4px 2px 10px;border:1px solid #d1d5db;border-radius:999px;font-size:12px;font-weight:400}",
+      "#fbe-dialog .fbe-chips span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}",
+      "#fbe-dialog .fbe-chips button{border:0;background:none;color:inherit;cursor:pointer;",
+      "font-size:14px;line-height:1;padding:2px 6px}",
       "#fbe-dialog .fbe-error{color:#dc2626;margin:0 0 12px}",
       "#fbe-dialog .fbe-actions{display:flex;justify-content:flex-end;gap:8px}",
       "#fbe-dialog button{padding:8px 14px;border-radius:8px;cursor:pointer;font:inherit}",
@@ -356,6 +454,7 @@
       "#fbe-dialog select,#fbe-dialog textarea,#fbe-dialog input[type=file]{border-color:#2a313a}",
       "#fbe-dialog input[type=file]{color:#9aa2ab}",
       "#fbe-dialog input[type=file]::file-selector-button{border-color:#2a313a;color:#e6e8ea}",
+      "#fbe-dialog .fbe-chips li{border-color:#2a313a}",
       "#fbe-dialog .fbe-secondary{border-color:#2a313a}",
       "#fbe-dialog .fbe-hint{color:#9aa2ab}",
       "}"

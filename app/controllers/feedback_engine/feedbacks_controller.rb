@@ -25,10 +25,12 @@ module FeedbackEngine
     def index
       @status = Feedback::STATUSES.include?(params[:status]) ? params[:status] : 'open'
       @kind = FeedbackEngine.config.kinds.map(&:to_s).include?(params[:kind]) ? params[:kind] : nil
+      @query = params[:q].to_s.strip.presence
       @counts = Feedback.group(:status).count
 
       scope = Feedback.where(status: @status)
       scope = scope.where(kind: @kind) if @kind
+      scope = search(scope) if @query
       @page = [params[:page].to_i, 1].max
       @feedbacks = scope.newest_first.offset((@page - 1) * PER_PAGE).limit(PER_PAGE + 1).to_a
       @more = @feedbacks.size > PER_PAGE
@@ -46,7 +48,7 @@ module FeedbackEngine
       return render json: { errors: [error] }, status: :unprocessable_entity if error
 
       if feedback.save
-        FeedbackEngine.config.on_submit.call(feedback)
+        notify_host(feedback)
         head :created
       else
         render json: { errors: feedback.errors.full_messages }, status: :unprocessable_entity
@@ -79,6 +81,28 @@ module FeedbackEngine
 
     def set_feedback
       @feedback = Feedback.find(params[:id])
+    end
+
+    # Case-insensitive match on the free-text columns. LOWER() keeps it
+    # portable across SQLite/PostgreSQL/MySQL, and the explicit ESCAPE makes
+    # the sanitized backslash escapes work on SQLite, which has no default
+    # LIKE escape character.
+    def search(scope)
+      pattern = "%#{Feedback.sanitize_sql_like(@query.downcase)}%"
+      scope.where(
+        "LOWER(message) LIKE :q ESCAPE '\\' OR LOWER(COALESCE(author_label, '')) LIKE :q ESCAPE '\\' " \
+        "OR LOWER(COALESCE(section, '')) LIKE :q ESCAPE '\\'",
+        q: pattern
+      )
+    end
+
+    # The host's hook must never turn a saved submission into a 500 — the
+    # feedback is in the database; notification failures are the host's logs'
+    # problem.
+    def notify_host(feedback)
+      FeedbackEngine.config.on_submit.call(feedback)
+    rescue StandardError => e
+      Rails.logger.error("feedback_engine: on_submit hook raised #{e.class}: #{e.message}")
     end
 
     def feedback_params

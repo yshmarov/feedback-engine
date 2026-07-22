@@ -53,6 +53,30 @@ RSpec.describe 'Feedback dashboard', type: :request do
       expect(response.body).not_to include('Solved one')
     end
 
+    it 'searches message, author, and section, case-insensitively' do
+      create_feedback(message: 'Dark mode please')
+      create_feedback(message: 'Broken button', author_label: 'darko@example.com')
+      create_feedback(message: 'Slow page', section: 'Darkroom')
+      create_feedback(message: 'Something different')
+
+      get '/feedback', params: { q: 'DARK' }
+
+      expect(response.body).to include('Dark mode please')
+      expect(response.body).to include('Broken button')
+      expect(response.body).to include('Slow page')
+      expect(response.body).not_to include('Something different')
+    end
+
+    it 'treats LIKE wildcards in the query literally' do
+      create_feedback(message: 'Discount is 100% off')
+      create_feedback(message: 'Plain message')
+
+      get '/feedback', params: { q: '100%' }
+
+      expect(response.body).to include('Discount is 100')
+      expect(response.body).not_to include('Plain message')
+    end
+
     it 'filters by status and kind' do
       create_feedback(message: 'A bug in review', status: 'in_review')
       create_feedback(message: 'A feature idea', kind: 'feature', status: 'in_review')

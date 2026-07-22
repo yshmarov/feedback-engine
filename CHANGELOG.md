@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 (2026-07-22)
+
+- Screenshots can now be pasted (Cmd/Ctrl+V) or dragged & dropped anywhere on
+  the feedback form, not just picked via the file dialog. Selected files show
+  as removable chips; non-images are ignored and the configured maximum is
+  enforced at intake.
+- The dialog traps Tab focus while open and is labelled for screen readers
+  (`aria-labelledby`).
+- Dashboard search across message, author, and section (case-insensitive,
+  LIKE-wildcard-safe, works on SQLite/PostgreSQL/MySQL).
+- A raising `on_submit` hook no longer turns a saved submission into a 500 —
+  the error is logged and the widget still gets its 201.
+- Releases are automated via RubyGems trusted publishing: pushing a `v*` tag
+  builds and publishes the gem from CI (one-time setup on rubygems.org
+  required; see `.github/workflows/release.yml`).
+
 ## 0.2.0 (2026-07-22)
 
 Security:

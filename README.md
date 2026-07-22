@@ -20,7 +20,8 @@ app.
 - **Trigger it your way.** Use the built-in floating button, or hide it and
   open the form from any element with a `data-feedback-engine-open` attribute.
 - **Screenshots included.** Users can attach up to 3 images (via Active
-  Storage) — limits are configurable and enforced server-side.
+  Storage) — picked, pasted (Cmd/Ctrl+V), or dragged onto the form. Limits are
+  configurable and enforced server-side.
 - **Pluggable gating and attribution.** You decide who can send feedback, who
   can read it, and how a submission is attributed to a user.
 - **Localized.** The widget follows your app's `I18n.locale`; translations ship
@@ -39,7 +40,8 @@ app.
    and (if you configure it) the current user — stored in the
    `feedback_engine_feedbacks` table.
 4. You browse and triage submissions at the mount path (`/feedback`): status
-   tabs (open → in review → resolved), type filter, screenshots inline.
+   tabs (open → in review → resolved), type filter, search, screenshots
+   inline.
 
 ## Requirements
 
@@ -175,9 +177,11 @@ end
 ### Screenshots
 
 Uploads use Active Storage: `bin/rails active_storage:install` if you haven't
-already. Limits (`max_screenshots`, `max_screenshot_size`) are enforced
-server-side and shown as a hint in the widget. If Active Storage isn't loaded,
-the upload control simply doesn't render and uploads are rejected.
+already. Users can pick files, paste an image from the clipboard, or drag &
+drop onto the form; selected files show as removable chips. Limits
+(`max_screenshots`, `max_screenshot_size`) are enforced server-side and shown
+as a hint in the widget. If Active Storage isn't loaded, the upload control
+simply doesn't render and uploads are rejected.
 
 ### Notifications
 
