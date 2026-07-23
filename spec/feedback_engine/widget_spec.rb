@@ -8,6 +8,11 @@ RSpec.describe FeedbackEngine::Widget do
     JSON.parse(json.gsub('<\/', '</'))
   end
 
+  it 'stays out of the host asset pipeline (no app/assets to auto-register)' do
+    expect(FeedbackEngine::Engine.paths['app/assets'].existent).to be_empty
+    expect(File.exist?(FeedbackEngine::Widget::SOURCE)).to be(true)
+  end
+
   describe '.snippet' do
     it 'ships the endpoint, kinds, sections, and limits as JSON data' do
       FeedbackEngine.config.sections = %w[Dashboard Billing]

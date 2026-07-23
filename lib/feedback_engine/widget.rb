@@ -7,9 +7,11 @@ module FeedbackEngine
   # framework, no build step) and styles itself inline, so it drops into any
   # Rails app regardless of its CSS or JS setup. It is inlined into the page
   # rather than served as a separate asset to avoid any dependency on the
-  # host's asset pipeline.
+  # host's asset pipeline — and it lives under lib/ (not app/assets/) so a
+  # host that *does* run a pipeline never ingests it either: nothing lands in
+  # the host's asset namespace or precompiled output.
   module Widget
-    SOURCE = File.expand_path('../../app/assets/feedback_engine/widget.js', __dir__)
+    SOURCE = File.expand_path('widget.js', __dir__)
 
     # Right-to-left scripts, so the form renders mirrored for those locales.
     # Matched on the language subtag, so region variants ("ar-EG") count too.

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.1 (2026-07-23)
+
+- The widget JavaScript moved from `app/assets/` to `lib/` (it was always
+  inlined server-side, never served as an asset). Rails auto-registers every
+  engine's `app/assets/*` directory with the host's asset pipeline, so
+  Propshaft hosts were ingesting the file into their asset namespace under
+  the bare logical name `widget.js` — colliding with any other gem or host
+  file of the same name — and needlessly digesting a public copy at
+  precompile. The gem is now invisible to Sprockets/Propshaft entirely.
+  No behavior change.
+
 ## 0.4.0 (2026-07-22)
 
 - Removed the clipboard-paste / drag-and-drop / file-chips screenshot intake
